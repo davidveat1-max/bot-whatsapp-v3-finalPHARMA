@@ -15,7 +15,8 @@ const PANEL_USER = "admin";
 const PANEL_PASS = "1234";
 
 const ADMINS = [
-  "5215512345678@c.us"
+  "522461742341@c.us"
+  "522462572591@c.us"
 ];
 
 const COMMAND_FILE = "./commands.json";
