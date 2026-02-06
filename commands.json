@@ -1,11 +1,7 @@
 {
-  "menu": "📋 COMANDOS DISPONIBLES\n\n!menu → ver comandos\n!dir → dirección\n!factura → revisión factura\n!aviso → aviso previsión\n!todos → mencionar todos",
-
-  "dir": "📍 DIRECCIÓN\nCalle Ejemplo 123\nColonia Centro\nCP 55000\nHorario: 8:00 a 16:00",
-
-  "factura": "🧾 REVISIÓN DE FACTURA\n- RFC correcto\n- Lote coincide\n- Caducidad visible\n- Temperatura\n- Certificado analítico\n- Firma proveedor",
-
-  "aviso": "📦 AVISO DE PREVISIÓN\n- Clave correcta\n- Cantidad autorizada\n- Fecha vencimiento\n- Responsable sanitario"
-
-  "sinavi": "PSIQUIATRICO\n- CENTRO DE SALUD MENTAL\n- AYOTOXCO\n- ZACAPALA\n- ZAPOTATITLAN\n- CUYOACO\n- MECAPALAPA\n- ZOQUITLAN\n- CUACNOPALAN",
+  "menu": "!menu !dir !factura !aviso !todos",
+  "dir": "Direccion ejemplo",
+  "factura": "Checklist factura",
+  "aviso": "Checklist aviso"
 }
+
