@@ -6,4 +6,6 @@
   "factura": "🧾 REVISIÓN DE FACTURA\n- RFC correcto\n- Lote coincide\n- Caducidad visible\n- Temperatura\n- Certificado analítico\n- Firma proveedor",
 
   "aviso": "📦 AVISO DE PREVISIÓN\n- Clave correcta\n- Cantidad autorizada\n- Fecha vencimiento\n- Responsable sanitario"
+
+  "sinavi": "PSIQUIATRICO\n- CENTRO DE SALUD MENTAL\n- AYOTOXCO\n- ZACAPALA\n- ZAPOTATITLAN\n- CUYOACO\n- MECAPALAPA\n- ZOQUITLAN\n- CUACNOPALAN",
 }
