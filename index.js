@@ -7,15 +7,10 @@ const basicAuth = require('basic-auth');
 const app = express();
 app.use(express.json());
 
-/* ======================
-   CONFIGURACIÓN
-====================== */
-
 const PANEL_USER = "admin";
 const PANEL_PASS = "1234";
 
 const ADMINS = [
-  "522461742341@c.us"
   "522462572591@c.us"
 ];
 
@@ -24,10 +19,6 @@ const BACKUP_DIR = "./backups";
 
 fs.ensureDirSync(BACKUP_DIR);
 
-/* ======================
-   AUTH PANEL
-====================== */
-
 function auth(req,res,next){
   const user = basicAuth(req);
   if(!user || user.name !== PANEL_USER || user.pass !== PANEL_PASS){
@@ -35,14 +26,6 @@ function auth(req,res,next){
     return res.sendStatus(401);
   }
   next();
-}
-
-/* ======================
-   COMANDOS
-====================== */
-
-if(!fs.existsSync(COMMAND_FILE)){
-  fs.writeJsonSync(COMMAND_FILE,{menu:"!menu"},{spaces:2});
 }
 
 function loadCommands(){
@@ -55,10 +38,6 @@ function saveCommands(data){
   fs.writeJsonSync(COMMAND_FILE,data,{spaces:2});
 }
 
-/* ======================
-   WHATSAPP CLIENT
-====================== */
-
 const client = new Client({
   authStrategy: new LocalAuth(),
   puppeteer:{
@@ -66,43 +45,22 @@ const client = new Client({
   }
 });
 
-/* ======================
-   QR
-====================== */
-
 client.on('qr', qr=>{
-  console.log("ESCANEA ESTE QR:");
+  console.log("ESCANEA QR:");
   qrcode.generate(qr,{small:true});
 });
 
-/* ======================
-   READY
-====================== */
-
 client.on('ready', ()=>{
-  console.log("BOT V3 LISTO");
+  console.log("BOT LISTO");
 });
-
-/* ======================
-   RECONEXIÓN
-====================== */
 
 client.on('disconnected', ()=>{
-  console.log("Reconectando...");
   client.initialize();
 });
-
-/* ======================
-   DELAY ANTI SPAM
-====================== */
 
 function delay(ms){
   return new Promise(r=>setTimeout(r,ms));
 }
-
-/* ======================
-   MENSAJES
-====================== */
 
 client.on('message', async msg=>{
 
@@ -113,13 +71,9 @@ client.on('message', async msg=>{
   const cmd = msg.body.slice(1).split(' ')[0].toLowerCase();
   const commands = loadCommands();
 
-  /* ----- MENU ----- */
-
   if(cmd === 'menu'){
     return msg.reply(commands.menu);
   }
-
-  /* ----- TODOS ----- */
 
   if(cmd === 'todos' && msg.from.endsWith('@g.us')){
 
@@ -130,13 +84,8 @@ client.on('message', async msg=>{
     const chat = await msg.getChat();
     const mentions = chat.participants.map(p=>p.id._serialized);
 
-    return chat.sendMessage(
-      "📢 Atención a todos",
-      { mentions }
-    );
+    return chat.sendMessage("Aviso general",{mentions});
   }
-
-  /* ----- TEXTOS LARGOS ----- */
 
   if(commands[cmd]){
     return msg.reply(commands[cmd]);
@@ -144,38 +93,19 @@ client.on('message', async msg=>{
 
 });
 
-/* ======================
-   PANEL WEB BONITO
-====================== */
-
 app.get('/', auth, (req,res)=>{
 
   const commands = loadCommands();
 
-  let html = `
-  <html>
-  <head>
-  <title>Panel Bot V3</title>
-  <style>
-  body{background:#020617;color:white;font-family:Arial;padding:40px}
-  h1{color:#22d3ee}
-  textarea{width:100%;height:150px;border-radius:12px;padding:12px}
-  button{padding:10px 20px;border-radius:10px;background:#22d3ee;border:0}
-  .card{background:#0f172a;padding:20px;border-radius:18px;margin-bottom:20px}
-  </style>
-  </head>
-  <body>
-  <h1>⚙️ Panel Bot V3</h1>
-  `;
+  let html = `<html><body style="background:#111;color:white;padding:30px">
+  <h1>Panel Bot</h1>`;
 
   for(const key in commands){
     html += `
-      <div class="card">
-      <h3>!${key}</h3>
-      <textarea id="${key}">${commands[key]}</textarea>
-      <button onclick="save('${key}')">Guardar</button>
-      </div>
-    `;
+    <h3>!${key}</h3>
+    <textarea id="${key}" style="width:100%;height:120px">${commands[key]}</textarea>
+    <button onclick="save('${key}')">Guardar</button>
+    <hr>`;
   }
 
   html += `
@@ -187,18 +117,12 @@ app.get('/', auth, (req,res)=>{
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({cmd,text})
     });
-    alert('Guardado');
+    alert('ok');
   }
-  </script>
-  </body></html>
-  `;
+  </script></body></html>`;
 
   res.send(html);
 });
-
-/* ======================
-   GUARDAR DESDE PANEL
-====================== */
 
 app.post('/save', auth, (req,res)=>{
   const {cmd,text} = req.body;
@@ -208,21 +132,6 @@ app.post('/save', auth, (req,res)=>{
   res.send({ok:true});
 });
 
-/* ======================
-   VER BACKUPS
-====================== */
-
-app.get('/backups', auth, (req,res)=>{
-  const files = fs.readdirSync(BACKUP_DIR);
-  res.json(files);
-});
-
-/* ======================
-   START
-====================== */
-
 client.initialize();
 
-app.listen(process.env.PORT || 3000, ()=>{
-  console.log("Panel activo");
-});
+app.listen(process.env.PORT || 3000);
